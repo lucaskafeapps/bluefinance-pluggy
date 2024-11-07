@@ -39,13 +39,16 @@ module.exports = async (req, res) => {
       throw new Error('Falha ao obter a chave da API. Verifique suas credenciais.');
     }
 
-    // Faz a requisição com apenas os headers, sem o body
     const data = await fetch('https://api.pluggy.ai/connect_token', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'X-API-KEY': apiKeyResponse.apiKey,
       },
+      body: JSON.stringify({
+        itemId,
+        ...(clientUserId ? { options: { clientUserId } } : {}),
+      }),
     }).then((res) => res.json());
 
     if (!data.accessToken) {
